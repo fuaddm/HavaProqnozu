@@ -115,40 +115,54 @@ const weatherCodes = [
 
 async function getData() {
   const resp = await fetch(
-    "https://api.open-meteo.com/v1/forecast?latitude=40.3777&longitude=49.892&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto"
+    "https://api.open-meteo.com/v1/forecast?latitude=40.3777&longitude=49.892&hourly=temperature_2m,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m&timezone=auto"
   );
   const data = await resp.json();
   return data;
 }
 
+function getTimeInHour(date) {
+  const hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+  const minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  return hours + ":" + minutes;
+}
+
 async function setData() {
   const data = await getData();
+  console.log(data);
 
-  function setMainCard(day) {
-    const mainWeatherCode = data.daily.weather_code[day];
-    const mainMaxTmp = data.daily.temperature_2m_max[day];
-    const mainMinTmp = data.daily.temperature_2m_min[day];
-    const mainAvarageTmp = (mainMinTmp + (mainMaxTmp - mainMinTmp) / 2).toFixed(1);
+  const nowHour = new Date().getHours();
+
+  function setMainCard(day, hour) {
+    const mainWeatherCode = data.hourly.weather_code[hour + 24 * day];
+    const temprature = data.hourly.temperature_2m[hour + 24 * day];
+    const windSpeed = data.hourly.wind_speed_10m[hour + 24 * day];
+    const windDirection = data.hourly.wind_direction_10m[hour + 24 * day];
+    const cloudCover = data.hourly.cloud_cover[hour + 24 * day];
+    const relativeHumidity = data.hourly.relative_humidity_2m[hour + 24 * day];
 
     if (day === 0) {
-      document.querySelector(".date").innerHTML = "Bu gün";
+      document.querySelector(".date").innerHTML = `Bu gün, ${getTimeInHour(new Date())}`;
     } else if (day === 1) {
-      document.querySelector(".date").innerHTML = "Sabah";
+      document.querySelector(".date").innerHTML = `Sabah, ${getTimeInHour(new Date())}`;
     } else {
-      document.querySelector(".date").innerHTML = new Date(data.daily.time[day]).toLocaleDateString();
+      document.querySelector(".date").innerHTML =
+        new Date(data.hourly.time[hour + 24 * day]).toLocaleDateString() + `, ${getTimeInHour(new Date())}`;
     }
-    document.querySelector(".temprature").innerHTML = mainAvarageTmp + " °C";
+    document.querySelector(".temprature").innerHTML = temprature + " °C";
     document.querySelector(".mainCard__img").src = weatherCodes.find((item) => item.code === mainWeatherCode).src;
+    document.querySelector("#wind").innerHTML = windSpeed + " km/h";
+    document.querySelector("#windDirection").innerHTML = windDirection + "°";
+    document.querySelector("#cloudCover").innerHTML = cloudCover + "%";
+    document.querySelector("#humidity").innerHTML = relativeHumidity + "%";
   }
 
-  setMainCard(0);
+  setMainCard(0, nowHour);
 
-  function setWeatherFor(day) {
-    const date = new Date(data.daily.time[day]).toLocaleDateString();
-    const weatherCode = data.daily.weather_code[day];
-    const maxTmp = data.daily.temperature_2m_max[day];
-    const minTmp = data.daily.temperature_2m_min[day];
-    const avarageTmp = (minTmp + (maxTmp - minTmp) / 2).toFixed(1);
+  function setWeatherFor(day, hour) {
+    const date = new Date(data.hourly.time[hour + 24 * day]).toLocaleDateString();
+    const weatherCode = data.hourly.weather_code[hour + 24 * day];
+    const temprature = data.hourly.temperature_2m[hour + 24 * day];
 
     const svgSrc = weatherCodes.find((item) => item.code === weatherCode).src;
 
@@ -156,10 +170,10 @@ async function setData() {
     card.className = "card";
     card.innerHTML = `<span class="card__date">${date}</span>
     <img class="card__img" src="${svgSrc}" alt="" />
-    <span class="card__tmp">${avarageTmp} °C</span>`;
+    <span class="card__tmp">${temprature} °C</span>`;
 
     card.addEventListener("click", () => {
-      setMainCard(day);
+      setMainCard(day, hour);
     });
 
     document.querySelector(".cards").appendChild(card);
@@ -168,7 +182,7 @@ async function setData() {
   document.querySelector(".cards").innerHTML = "";
 
   for (let i = 0; i < 7; i++) {
-    setWeatherFor(i);
+    setWeatherFor(i, nowHour);
   }
 }
 

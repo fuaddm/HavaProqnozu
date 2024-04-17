@@ -54,16 +54,18 @@ body {
 }
 .mainCard {
   margin: 60px auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: fit-content;
-  padding: 24px 64px 36px;
+  padding: 24px;
 
   background: hsl(0, 0%, 20%);
   border: 1px solid hsl(0, 0%, 30%);
   border-radius: 8px;
+}
+.mainCard__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .date {
   font-size: 16px;
@@ -75,6 +77,33 @@ body {
 .temprature {
   font-size: 44px;
   font-weight: 700;
+}
+.additional__info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 24px 64px;
+  width: fit-content;
+  margin: 24px auto 0;
+
+  background: hsl(0, 0%, 25%);
+  border: 1px solid hsl(0, 0%, 35%);
+  border-radius: 6px;
+  padding: 24px;
+}
+.info__cell {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+
+  min-width: 186px;
+}
+.info__name {
+  font-size: 16px;
+}
+.info__data {
+  font-size: 16px;
+  font-weight: 500;
 }
 .cards {
   display: grid;
@@ -127,15 +156,24 @@ body {
   .title > svg {
     display: none;
   }
-  .mainCard {
-    padding: 24px;
-  }
   .date {
     font-size: 16px;
+  }
+  .mainCard {
+    padding: 12px;
+    width: 100%;
   }
   .mainCard__img {
     width: 120px;
     height: 120px;
+  }
+  .additional__info {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    width: 100%;
+  }
+  .info__cell {
+    width: 100%;
   }
   .temprature {
     font-size: 32px;
@@ -144,7 +182,7 @@ body {
   .cards {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    margin: 0 12px;
+    margin: 0;
   }
   .card__date {
     font-size: 14px;
