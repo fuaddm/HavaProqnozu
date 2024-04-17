@@ -129,8 +129,8 @@ function getTimeInHour(date) {
 
 async function setData() {
   const data = await getData();
-  console.log(data);
 
+  const nowDate = new Date();
   const nowHour = new Date().getHours();
 
   function setMainCard(day, hour) {
@@ -147,7 +147,7 @@ async function setData() {
       document.querySelector(".date").innerHTML = `Sabah, ${getTimeInHour(new Date())}`;
     } else {
       document.querySelector(".date").innerHTML =
-        new Date(data.hourly.time[hour + 24 * day]).toLocaleDateString() + `, ${getTimeInHour(new Date())}`;
+        new Date(data.hourly.time[hour + 24 * day]).toLocaleDateString() + `, ${getTimeInHour(nowDate)}`;
     }
     document.querySelector(".temprature").innerHTML = temprature + " °C";
     document.querySelector(".mainCard__img").src = weatherCodes.find((item) => item.code === mainWeatherCode).src;
