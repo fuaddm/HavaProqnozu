@@ -142,9 +142,9 @@ async function setData() {
     const relativeHumidity = data.hourly.relative_humidity_2m[hour + 24 * day];
 
     if (day === 0) {
-      document.querySelector(".date").innerHTML = `Bu gün, ${getTimeInHour(new Date())}`;
+      document.querySelector(".date").innerHTML = `Bu gün, ${getTimeInHour(nowDate)}`;
     } else if (day === 1) {
-      document.querySelector(".date").innerHTML = `Sabah, ${getTimeInHour(new Date())}`;
+      document.querySelector(".date").innerHTML = `Sabah, ${getTimeInHour(nowDate)}`;
     } else {
       document.querySelector(".date").innerHTML =
         new Date(data.hourly.time[hour + 24 * day]).toLocaleDateString() + `, ${getTimeInHour(nowDate)}`;
