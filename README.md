@@ -1,1 +1,1 @@
-Website link https://fuad2004.github.io/HavaProqnozu/
+Website link https://fuaddm.github.io/HavaProqnozu/
